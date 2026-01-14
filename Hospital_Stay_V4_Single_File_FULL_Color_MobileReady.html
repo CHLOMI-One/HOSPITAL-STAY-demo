@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Hospital Stay – Requester Demo (V4)</title>
+<style>
+:root{
+ --bg:#f4f7ff;
+ --card:#ffffff;
+ --text:#0f172a;
+ --muted:#64748b;
+ --border:#e5e7eb;
+ --primary:#1d4ed8;
+ --primary2:#0b2f8a;
+ --accent:#22c55e;
+ --soft:#eef2ff;
+ --shadow:0 14px 40px rgba(2,6,23,.14);
+ --radius:18px;
+ --font:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#eef2ff,#f8fafc 50%,#ffffff);font-family:var(--font);color:var(--text)}
+.wrap{padding:18px}
+.shell{max-width:980px;margin:0 auto;display:grid;grid-template-columns:420px 1fr;gap:22px;align-items:start}
+@media (max-width:860px){.shell{grid-template-columns:1fr}}
+.phone{background:radial-gradient(1200px 400px at 50% -20%,rgba(255,255,255,.22),transparent),#0b1220;border-radius:38px;padding:14px;box-shadow:var(--shadow)}
+@media (max-width:860px){.phone{border-radius:22px;padding:10px}}
+.screen{background:var(--bg);border-radius:28px;min-height:760px;overflow:auto;position:relative}
+@media (max-width:860px){.screen{min-height:calc(100dvh - 64px);}}
+.app-header{position:sticky;top:0;z-index:5;background:linear-gradient(90deg,var(--primary2),var(--primary));color:white;padding:12px 14px 10px;border-bottom:1px solid rgba(255,255,255,.18);}
+.header-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{display:flex;flex-direction:column;gap:3px}
+.brand-title{font-weight:900;font-size:14px;letter-spacing:.2px}
+.brand-sub{font-size:12px;opacity:.9}
+.lang button{border:none;background:rgba(255,255,255,.18);color:white;border-radius:999px;padding:7px 10px;font-weight:900;cursor:pointer}
+.lang button.active{background:white;color:var(--primary2)}
+.app{padding:16px}
+.h1{font-size:22px;font-weight:950;margin:8px 0 6px;letter-spacing:-.2px}
+.p{color:var(--muted);margin:0;line-height:1.45}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-top:12px;box-shadow:0 8px 24px rgba(15,23,42,.06)}
+.notice{margin-top:10px;padding:10px 11px;border-radius:14px;border:1px solid var(--border);background:var(--soft);color:var(--muted);line-height:1.45}
+.btnrow{display:flex;gap:10px;margin-top:12px}
+.btn{width:100%;padding:14px;border-radius:14px;border:none;font-weight:950;cursor:pointer}
+.primary{background:linear-gradient(180deg,#2563eb,#1d4ed8);color:white}
+.secondary{background:white;border:1px solid var(--border);color:var(--primary)}
+.field{margin-top:10px}
+label{display:block;font-size:12px;color:var(--muted);font-weight:900;margin-bottom:6px}
+input,textarea,select{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--border);font:inherit;background:white}
+textarea{min-height:96px;resize:vertical}
+.inline{display:flex;gap:10px}
+.inline>div{flex:1}
+@media (max-width:520px){.inline{flex-direction:column}}
+.toggle{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:10px 11px;border:1px solid var(--border);border-radius:12px;background:#fbfcfe}
+.toggle span{color:var(--muted);font-weight:900;font-size:13px}
+.small{font-size:12px;color:var(--muted)}
+.hr{height:1px;background:var(--border);margin:10px 0}
+.check{width:56px;height:56px;border-radius:18px;background:rgba(34,197,94,.16);color:var(--accent);display:grid;place-items:center;font-size:28px;margin:16px auto 8px}
+.offer{border:1px solid var(--border);border-radius:16px;padding:12px;margin-top:12px;background:white;box-shadow:0 6px 18px rgba(15,23,42,.06)}
+.offer h3{margin:0;font-size:16px}
+.offer .meta{color:var(--muted);font-size:13px;margin-top:6px;line-height:1.35}
+.offer .price{font-weight:950;margin-top:8px}
+.badge{display:inline-block;font-size:12px;font-weight:950;color:var(--primary2);background:#dbeafe;border-radius:999px;padding:6px 10px;margin-top:8px}
+html[dir="rtl"]{direction:rtl}
+html[dir="rtl"] .btnrow{flex-direction:row-reverse}
+html[dir="rtl"] .lang button{margin-left:0;margin-right:6px}
+.side{background:white;border:1px solid var(--border);border-radius:18px;padding:14px;box-shadow:0 8px 24px rgba(15,23,42,.06)}
+.side h2{margin:0 0 8px;font-size:16px}
+.kv{display:flex;justify-content:space-between;padding:6px 0;color:var(--muted)}
+.kv b{color:var(--text)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="shell">
+    <div class="phone">
+      <div class="screen">
+        <div class="app-header">
+          <div class="header-row">
+            <div class="brand">
+              <div class="brand-title" id="t_appTitle">Hospital Stay Support</div>
+              <div class="brand-sub" id="t_appSub">Accommodation near the hospital</div>
+            </div>
+            <div class="lang">
+              <button id="btn_en">EN</button>
+              <button id="btn_he">עברית</button>
+            </div>
+          </div>
+        </div>
+        <div id="app"></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <h2>Demo status</h2>
+      <div class="kv"><span>Build</span> <b>V4</b></div>
+      <div class="kv"><span>Flow</span> <b>7 screens</b></div>
+      <div class="kv"><span>Languages</span> <b>EN / HE (RTL)</b></div>
+      <div class="kv"><span>Hospitals</span> <b>Israel list + search</b></div>
+      <div class="kv"><span>Requester fields</span> <b>Expanded</b></div>
+      <p class="p" style="margin-top:10px">Mobile test: open this file on your phone in a browser.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const hospitals = [{"id": "ichilov", "en": "Tel Aviv Sourasky Medical Center (Ichilov)", "he": "המרכז הרפואי תל אביב ע״ש סוראסקי (איכילוב)", "city_en": "Tel Aviv", "city_he": "תל אביב"}, {"id": "sheba", "en": "Sheba Medical Center (Tel HaShomer)", "he": "המרכז הרפואי שיבא (תל השומר)", "city_en": "Ramat Gan", "city_he": "רמת גן"}, {"id": "hadassah-ein-kerem", "en": "Hadassah Medical Center (Ein Kerem)", "he": "המרכז הרפואי הדסה (עין כרם)", "city_en": "Jerusalem", "city_he": "ירושלים"}, {"id": "hadassah-mt-scopus", "en": "Hadassah Medical Center (Mount Scopus)", "he": "המרכז הרפואי הדסה (הר הצופים)", "city_en": "Jerusalem", "city_he": "ירושלים"}, {"id": "rambam", "en": "Rambam Health Care Campus", "he": "המרכז הרפואי רמב״ם", "city_en": "Haifa", "city_he": "חיפה"}, {"id": "soroka", "en": "Soroka Medical Center", "he": "המרכז הרפואי סורוקה", "city_en": "Be'er Sheva", "city_he": "באר שבע"}, {"id": "assuta-ta", "en": "Assuta Medical Center (Tel Aviv)", "he": "אסותא מרכזים רפואיים (תל אביב)", "city_en": "Tel Aviv", "city_he": "תל אביב"}, {"id": "wolfson", "en": "Wolfson Medical Center", "he": "המרכז הרפואי וולפסון", "city_en": "Holon", "city_he": "חולון"}];
+
+const i18n = {
+  en: {
+    appTitle:"Hospital Stay Support",
+    appSub:"Accommodation near the hospital",
+    homeTitle:"Find accommodation near the hospital",
+    homeSub:"For families visiting a hospitalized loved one",
+    start:"Request accommodation",
+    how:"How it works",
+    howText:"Submit a request, receive nearby offers from trusted hosts/associations, and choose the best option.",
+    createTitle:"Accommodation request",
+    createHint:"Please provide a few details so we can help you.",
+    firstName:"First name",
+    lastName:"Last name",
+    idNumber:"ID number",
+    address:"Address",
+    phone:"Phone number",
+    email:"Email address",
+    hospital:"Hospital",
+    hospitalSearch:"Search hospital…",
+    dates:"Dates of stay",
+    dateFrom:"Check-in",
+    dateTo:"Check-out",
+    dateHint:"Format: dd/mm/yyyy",
+    guests:"Number of guests",
+    kitchenette:"Kitchenette required",
+    bnb:"Bed & Breakfast option",
+    more:"Additional information (optional)",
+    moreHint:"Please mention any special situation or specific need.",
+    submit:"Submit request",
+    back:"Back",
+    sentTitle:"Your request has been sent",
+    sentSub:"We are contacting trusted hosts near the hospital.",
+    waiting:"Waiting for offers…",
+    viewOffers:"View offers",
+    offersTitle:"Available accommodations near",
+    offersSub:"Choose the option that best fits your needs.",
+    viewDetails:"View details",
+    detailsTitle:"Accommodation details",
+    distance:"Distance from hospital",
+    facilities:"Facilities",
+    price:"Price",
+    coordinated:"Coordinated with hospital support",
+    accept:"Accept offer",
+    decline:"Back to offers",
+    confirmTitle:"Confirm your stay",
+    review:"Please review the details below before confirming.",
+    total:"Total",
+    managed:"Payment is managed securely by hospital administration (if applicable).",
+    confirm:"Confirm accommodation",
+    confirmedTitle:"Your accommodation is confirmed",
+    confirmedSub:"We wish you strength and comfort during this time.",
+    home:"Back to home",
+    yes:"Yes", no:"No",
+    offer1Title:"Charity Apartment",
+    offer1Sub:"Furnished studio with kitchenette",
+    offer1Price:"Free (donation-funded)",
+    offer2Title:"Private Room",
+    offer2Sub:"Private room with shared kitchenette",
+    offer2Price:"€70 / night",
+    offer3Title:"Cozy Studio",
+    offer3Sub:"Independent studio",
+    offer3Price:"€60 / night",
+  },
+  he: {
+    appTitle:"סיוע למשפחות ליד בית החולים",
+    appSub:"מציאת מקום לינה סמוך לבית החולים",
+    homeTitle:"מציאת מקום לינה סמוך לבית החולים",
+    homeSub:"עבור משפחות המבקרות קרוב מאושפז",
+    start:"בקשת מקום לינה",
+    how:"איך זה עובד",
+    howText:"מגישים בקשה, מקבלים הצעות ממארחים/עמותות סמוכות, ובוחרים את האפשרות המתאימה.",
+    createTitle:"בקשת מקום לינה",
+    createHint:"נא להזין כמה פרטים כדי שנוכל לעזור.",
+    firstName:"שם פרטי",
+    lastName:"שם משפחה",
+    idNumber:"תעודת זהות",
+    address:"כתובת",
+    phone:"מספר טלפון",
+    email:"כתובת אימייל",
+    hospital:"בית חולים",
+    hospitalSearch:"חיפוש בית חולים…",
+    dates:"תאריכי שהייה",
+    dateFrom:"כניסה",
+    dateTo:"יציאה",
+    dateHint:"פורמט: dd/mm/yyyy",
+    guests:"מספר אורחים",
+    kitchenette:"נדרש מטבחון",
+    bnb:"אפשרות לינה וארוחת בוקר",
+    more:"מידע נוסף (לא חובה)",
+    moreHint:"ניתן לציין כל צורך מיוחד או מצב חריג.",
+    submit:"שליחת בקשה",
+    back:"חזרה",
+    sentTitle:"הבקשה נשלחה",
+    sentSub:"אנחנו יוצרים קשר עם מארחים מאומתים סמוך לבית החולים.",
+    waiting:"ממתין להצעות…",
+    viewOffers:"צפייה בהצעות",
+    offersTitle:"אפשרויות לינה סמוך ל-",
+    offersSub:"בחרו את האפשרות המתאימה לכם.",
+    viewDetails:"פרטים",
+    detailsTitle:"פרטי מקום הלינה",
+    distance:"מרחק מבית החולים",
+    facilities:"מתקנים",
+    price:"מחיר",
+    coordinated:"מתואם עם סיוע בית החולים",
+    accept:"אישור ההצעה",
+    decline:"חזרה להצעות",
+    confirmTitle:"אישור השהייה",
+    review:"נא לבדוק את הפרטים לפני האישור.",
+    total:"סה״כ",
+    managed:"התשלום מנוהל באופן מאובטח על ידי הנהלת בית החולים (אם רלוונטי).",
+    confirm:"אישור מקום לינה",
+    confirmedTitle:"מקום הלינה אושר",
+    confirmedSub:"מאחלים לכם חוסן ונחמה בתקופה זו.",
+    home:"חזרה למסך הבית",
+    yes:"כן", no:"לא",
+    offer1Title:"דירת עמותה",
+    offer1Sub:"סטודיו מרוהט עם מטבחון",
+    offer1Price:"ללא עלות (ממומן מתרומות)",
+    offer2Title:"חדר פרטי",
+    offer2Sub:"חדר פרטי עם מטבחון משותף",
+    offer2Price:"€70 ללילה",
+    offer3Title:"סטודיו נעים",
+    offer3Sub:"סטודיו עצמאי",
+    offer3Price:"€60 ללילה",
+  }
+};
+
+const state = {
+  lang: localStorage.getItem("hs_lang") || "en",
+  screen: "home",
+  hospitalFilter:"",
+  selectedOfferId:"offer-1",
+  request: {
+    firstName:"",
+    lastName:"",
+    idNumber:"",
+    address:"",
+    phone:"",
+    email:"",
+    hospitalId:"ichilov",
+    dateFrom:"",
+    dateTo:"",
+    guests:2,
+    kitchenette:true,
+    bnb:false,
+    additionalInfo:""
+  },
+  offers: [
+    {id:"offer-1", titleKey:"offer1Title", subKey:"offer1Sub", distance:"800 m", priceKey:"offer1Price", kitchenette:true, badge:true},
+    {id:"offer-2", titleKey:"offer2Title", subKey:"offer2Sub", distance:"1.4 km", priceKey:"offer2Price", kitchenette:true, badge:false},
+    {id:"offer-3", titleKey:"offer3Title", subKey:"offer3Sub", distance:"2.2 km", priceKey:"offer3Price", kitchenette:true, badge:false},
+  ]
+};
+
+const $ = (q)=>document.querySelector(q);
+const t = (k)=> (i18n[state.lang] && i18n[state.lang][k]) || k;
+
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function setLang(lang){
+  state.lang = lang;
+  localStorage.setItem("hs_lang", lang);
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang==="he") ? "rtl" : "ltr";
+  $("#btn_en").classList.toggle("active", lang==="en");
+  $("#btn_he").classList.toggle("active", lang==="he");
+  $("#t_appTitle").textContent = t("appTitle");
+  $("#t_appSub").textContent = t("appSub");
+  render();
+}
+
+function hospitalLabel(id){
+  const h = hospitals.find(x=>x.id===id);
+  if(!h) return id;
+  return (state.lang==="he") ? h.he : h.en;
+}
+
+function hospitalOptionLabel(h){
+  return (state.lang==="he")
+    ? `${h.he} — ${h.city_he}`
+    : `${h.en} — ${h.city_en}`;
+}
+
+function go(screen){ state.screen = screen; render(); }
+
+function ScreenHome(){
+  return `
+  <div class="app">
+    <div class="h1">${t("homeTitle")}</div>
+    <p class="p">${t("homeSub")}</p>
+    <div class="card">
+      <div class="notice"><b>${t("how")}:</b> ${t("howText")}</div>
+      <button class="btn primary" data-action="go-create">${t("start")}</button>
+    </div>
+  </div>`;
+}
+
+function ScreenCreate(){
+  const r = state.request;
+  const q = (state.hospitalFilter||"").toLowerCase();
+  const filtered = hospitals.filter(h=>hospitalOptionLabel(h).toLowerCase().includes(q));
+  return `
+  <div class="app">
+    <div class="h1">${t("createTitle")}</div>
+    <p class="p">${t("createHint")}</p>
+
+    <div class="card">
+      <div class="inline">
+        <div class="field"><label>${t("firstName")}</label><input id="firstName" value="${escapeHtml(r.firstName)}"/></div>
+        <div class="field"><label>${t("lastName")}</label><input id="lastName" value="${escapeHtml(r.lastName)}"/></div>
+      </div>
+
+      <div class="inline">
+        <div class="field"><label>${t("idNumber")}</label><input id="idNumber" value="${escapeHtml(r.idNumber)}"/></div>
+        <div class="field"><label>${t("phone")}</label><input id="phone" value="${escapeHtml(r.phone)}"/></div>
+      </div>
+
+      <div class="field"><label>${t("email")}</label><input id="email" value="${escapeHtml(r.email)}"/></div>
+      <div class="field"><label>${t("address")}</label><input id="address" value="${escapeHtml(r.address)}"/></div>
+
+      <div class="field">
+        <label>${t("hospital")}</label>
+        <input id="hospitalSearch" placeholder="${t("hospitalSearch")}" value="${escapeHtml(state.hospitalFilter)}"/>
+        <select id="hospitalSelect">
+          ${filtered.map(h=>`<option value="${h.id}">${escapeHtml(hospitalOptionLabel(h))}</option>`).join("")}
+        </select>
+        <div class="small" style="margin-top:6px">${state.lang==="he" ? "רשימת בתי חולים בישראל (ניתן לחפש)" : "Israel hospital list (searchable)"}</div>
+      </div>
+
+      <div class="field">
+        <label>${t("dates")}</label>
+        <div class="inline">
+          <div>
+            <label style="margin-bottom:6px">${t("dateFrom")}</label>
+            <input id="dateFrom" placeholder="dd/mm/yyyy" value="${escapeHtml(r.dateFrom)}"/>
+            <div class="small" style="margin-top:6px">${t("dateHint")}</div>
+          </div>
+          <div>
+            <label style="margin-bottom:6px">${t("dateTo")}</label>
+            <input id="dateTo" placeholder="dd/mm/yyyy" value="${escapeHtml(r.dateTo)}"/>
+            <div class="small" style="margin-top:6px">${t("dateHint")}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>${t("guests")}</label>
+        <input id="guests" type="number" min="1" max="8" value="${r.guests}"/>
+      </div>
+
+      <div class="toggle">
+        <span>${t("kitchenette")}</span>
+        <input id="kitchenette" type="checkbox" ${r.kitchenette ? "checked":""}/>
+      </div>
+
+      <div class="toggle">
+        <span>${t("bnb")}</span>
+        <input id="bnb" type="checkbox" ${r.bnb ? "checked":""}/>
+      </div>
+
+      <div class="field">
+        <label>${t("more")}</label>
+        <textarea id="additionalInfo" placeholder="${t("moreHint")}">${escapeHtml(r.additionalInfo)}</textarea>
+      </div>
+
+      <div class="btnrow">
+        <button class="btn secondary" data-action="back-home">${t("back")}</button>
+        <button class="btn primary" data-action="submit">${t("submit")}</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function ScreenSent(){
+  return `
+  <div class="app">
+    <div class="check">✓</div>
+    <div class="h1" style="text-align:center">${t("sentTitle")}</div>
+    <p class="p" style="text-align:center">${t("sentSub")}</p>
+    <div class="notice" style="text-align:center">${t("waiting")}</div>
+    <div class="btnrow">
+      <button class="btn secondary" data-action="back-create">${t("back")}</button>
+      <button class="btn primary" data-action="go-offers">${t("viewOffers")}</button>
+    </div>
+  </div>`;
+}
+
+function OfferCard(o){
+  return `
+    <div class="offer">
+      <h3>${t(o.titleKey)}</h3>
+      <div class="meta">${t(o.subKey)}</div>
+      <div class="meta">${o.distance} • ${t("distance")}</div>
+      <div class="price">${t(o.priceKey)}</div>
+      ${o.badge ? `<div class="badge">${t("coordinated")}</div>` : ""}
+      <div class="btnrow">
+        <button class="btn secondary" data-action="back-sent">${t("back")}</button>
+        <button class="btn primary" data-action="details" data-offer="${o.id}">${t("viewDetails")}</button>
+      </div>
+    </div>`;
+}
+
+function ScreenOffers(){
+  const hosp = hospitalLabel(state.request.hospitalId);
+  return `
+  <div class="app">
+    <div class="h1">${t("offersTitle")} ${escapeHtml(hosp)}</div>
+    <p class="p">${t("offersSub")}</p>
+    ${state.offers.map(OfferCard).join("")}
+  </div>`;
+}
+
+function ScreenDetails(){
+  const o = state.offers.find(x=>x.id===state.selectedOfferId) || state.offers[0];
+  return `
+  <div class="app">
+    <div class="h1">${t("detailsTitle")}</div>
+    <div class="card">
+      <div style="font-weight:950;font-size:16px">${t(o.titleKey)}</div>
+      <div class="p" style="margin-top:6px">${t(o.subKey)}</div>
+      <div class="badge" style="margin-top:10px">${t("coordinated")}</div>
+      <div class="hr"></div>
+      <div class="p"><b>${t("distance")}:</b> ${o.distance}</div>
+      <div class="p" style="margin-top:6px"><b>${t("facilities")}:</b> Kitchenette — ${o.kitchenette ? t("yes") : t("no")}</div>
+      <div class="p" style="margin-top:6px"><b>${t("price")}:</b> ${t(o.priceKey)}</div>
+      <div class="hr"></div>
+      <p class="p">${state.lang==="he" ? "לחצו אישור כדי להמשיך לאישור שהייה." : "Tap Accept to continue to confirmation."}</p>
+      <div class="btnrow">
+        <button class="btn secondary" data-action="back-offers">${t("decline")}</button>
+        <button class="btn primary" data-action="accept">${t("accept")}</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function ScreenConfirm(){
+  const r = state.request;
+  const o = state.offers.find(x=>x.id===state.selectedOfferId);
+  const hosp = hospitalLabel(r.hospitalId);
+  const total = (o && o.id==="offer-1") ? "€0" : (o ? t(o.priceKey) : "-");
+  const fullName = (r.firstName || r.lastName) ? `${escapeHtml(r.firstName)} ${escapeHtml(r.lastName)}`.trim() : "—";
+  return `
+  <div class="app">
+    <div class="h1">${t("confirmTitle")}</div>
+    <p class="p">${t("review")}</p>
+    <div class="card">
+      <div class="p"><b>${t("firstName")} / ${t("lastName")}:</b> ${fullName}</div>
+      <div class="p" style="margin-top:6px"><b>${t("idNumber")}:</b> ${escapeHtml(r.idNumber || "—")}</div>
+      <div class="p" style="margin-top:6px"><b>${t("phone")}:</b> ${escapeHtml(r.phone || "—")}</div>
+      <div class="p" style="margin-top:6px"><b>${t("email")}:</b> ${escapeHtml(r.email || "—")}</div>
+      <div class="p" style="margin-top:6px"><b>${t("address")}:</b> ${escapeHtml(r.address || "—")}</div>
+      <div class="hr"></div>
+      <div class="p"><b>${t("hospital")}:</b> ${escapeHtml(hosp)}</div>
+      <div class="p" style="margin-top:6px"><b>${t("dates")}:</b> ${escapeHtml(r.dateFrom || "—")} → ${escapeHtml(r.dateTo || "—")}</div>
+      <div class="p" style="margin-top:6px"><b>${t("guests")}:</b> ${r.guests}</div>
+      <div class="p" style="margin-top:6px"><b>${t("kitchenette")}:</b> ${r.kitchenette ? t("yes") : t("no")}</div>
+      <div class="p" style="margin-top:6px"><b>${t("bnb")}:</b> ${r.bnb ? t("yes") : t("no")}</div>
+      <div class="p" style="margin-top:6px"><b>${t("more")}:</b> ${r.additionalInfo ? escapeHtml(r.additionalInfo) : "—"}</div>
+      <div class="hr"></div>
+      <div class="p"><b>${t("total")}:</b> ${escapeHtml(total)}</div>
+      <div class="notice">${t("managed")}</div>
+      <div class="btnrow">
+        <button class="btn secondary" data-action="back-details">${t("back")}</button>
+        <button class="btn primary" data-action="confirm">${t("confirm")}</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function ScreenConfirmed(){
+  return `
+  <div class="app">
+    <div class="check">✓</div>
+    <div class="h1" style="text-align:center">${t("confirmedTitle")}</div>
+    <p class="p" style="text-align:center">${t("confirmedSub")}</p>
+    <div class="btnrow">
+      <button class="btn secondary" data-action="back-confirm">${t("back")}</button>
+      <button class="btn primary" data-action="home">${t("home")}</button>
+    </div>
+  </div>`;
+}
+
+function render(){
+  $("#t_appTitle").textContent = t("appTitle");
+  $("#t_appSub").textContent = t("appSub");
+
+  const app = $("#app");
+  if(state.screen==="home") app.innerHTML = ScreenHome();
+  if(state.screen==="create") app.innerHTML = ScreenCreate();
+  if(state.screen==="sent") app.innerHTML = ScreenSent();
+  if(state.screen==="offers") app.innerHTML = ScreenOffers();
+  if(state.screen==="details") app.innerHTML = ScreenDetails();
+  if(state.screen==="confirm") app.innerHTML = ScreenConfirm();
+  if(state.screen==="confirmed") app.innerHTML = ScreenConfirmed();
+  wire();
+
+  if(state.screen==="create"){
+    const sel = $("#hospitalSelect");
+    if(sel) sel.value = state.request.hospitalId;
+  }
+}
+
+function wire(){
+  document.querySelectorAll("[data-action]").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const act = el.getAttribute("data-action");
+      if(act==="go-create") return go("create");
+      if(act==="back-home") return go("home");
+      if(act==="back-create") return go("create");
+      if(act==="go-offers") return go("offers");
+      if(act==="back-sent") return go("sent");
+      if(act==="details"){ state.selectedOfferId = el.getAttribute("data-offer"); return go("details"); }
+      if(act==="back-offers") return go("offers");
+      if(act==="accept") return go("confirm");
+      if(act==="back-details") return go("details");
+      if(act==="confirm") return go("confirmed");
+      if(act==="back-confirm") return go("confirm");
+      if(act==="home") return go("home");
+      if(act==="submit"){
+        state.request.firstName = $("#firstName").value.trim();
+        state.request.lastName = $("#lastName").value.trim();
+        state.request.idNumber = $("#idNumber").value.trim();
+        state.request.phone = $("#phone").value.trim();
+        state.request.email = $("#email").value.trim();
+        state.request.address = $("#address").value.trim();
+        state.request.hospitalId = $("#hospitalSelect").value;
+        state.request.dateFrom = $("#dateFrom").value.trim();
+        state.request.dateTo = $("#dateTo").value.trim();
+        state.request.guests = parseInt($("#guests").value || "2", 10);
+        state.request.kitchenette = $("#kitchenette").checked;
+        state.request.bnb = $("#bnb").checked;
+        state.request.additionalInfo = $("#additionalInfo").value.trim();
+        return go("sent");
+      }
+    });
+  });
+
+  const hs = $("#hospitalSearch");
+  if(hs){
+    hs.addEventListener("input", ()=>{
+      state.hospitalFilter = hs.value;
+      render();
+    });
+  }
+}
+
+$("#btn_en").addEventListener("click", ()=>setLang("en"));
+$("#btn_he").addEventListener("click", ()=>setLang("he"));
+setLang(state.lang);
+</script>
+
+<!-- Generated: 2026-01-14 -->
+</body>
+</html>
