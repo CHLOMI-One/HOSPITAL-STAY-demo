@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Hospital Stay – Requester Demo (V5)</title>
+  <title>Hospital Stay – Requester Demo (V5-1)</title>
   <style>
     :root{
       --bg:#f4f7ff;
@@ -66,12 +66,16 @@
     .kpi{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
     .kpi .pill{padding:8px 10px;border-radius:999px;background:#f1f5f9;border:1px solid var(--border);font-weight:950;color:#0f172a;font-size:12px}
     html[dir="rtl"]{direction:rtl}
+    html[dir="rtl"] .btnrow{flex && }
     html[dir="rtl"] .btnrow{flex-direction:row-reverse}
     html[dir="rtl"] .lang button{margin-left:0;margin-right:6px}
     .side{background:white;border:1px solid var(--border);border-radius:18px;padding:14px;box-shadow:0 8px 24px rgba(15,23,42,.06)}
     .side h2{margin:0 0 8px;font-size:16px}
     .kv{display:flex;justify-content:space-between;padding:6px 0;color:var(--muted)}
     .kv b{color:var(--text)}
+    .radioGroup{margin-top:10px;padding:10px 11px;border:1px solid var(--border);border-radius:12px;background:#fbfcfe}
+    .radioRow{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .radioRow label{margin:0;font-size:13px;color:var(--text);font-weight:900;display:flex;gap:8px;align-items:center}
   </style>
 </head>
 <body>
@@ -97,13 +101,11 @@
 
     <div class="side">
       <h2>Demo status</h2>
-      <div class="kv"><span>Build</span> <b>V5</b></div>
-      <div class="kv"><span>Currency</span> <b>₪ (ILS)</b></div>
-      <div class="kv"><span>Dates</span> <b>dd/mm/yyyy + validation</b></div>
-      <div class="kv"><span>Nights</span> <b>Auto-calculated</b></div>
-      <div class="kv"><span>Total</span> <b>Auto-calculated</b></div>
-      <div class="kv"><span>Hospitals</span> <b>Israel list + Levinstein (Ra'anana)</b></div>
-      <p class="p" style="margin-top:10px">This panel is only for demo on PC. On mobile, it will not be visible.</p>
+      <div class="kv"><span>Build</span> <b>V5-1</b></div>
+      <div class="kv"><span>Dates input</span> <b>digits-only + auto “/”</b></div>
+      <div class="kv"><span>ID (TZ)</span> <b>9 digits</b></div>
+      <div class="kv"><span>Phone</span> <b>9–10 digits</b></div>
+      <div class="kv"><span>Kitchenette/B&B</span> <b>Exclusive choice</b></div>
     </div>
   </div>
 </div>
@@ -134,19 +136,20 @@
       createHint:"Please provide a few details so we can help you.",
       firstName:"First name",
       lastName:"Last name",
-      idNumber:"ID number",
+      idNumber:"ID number (TZ) – 9 digits",
       address:"Address",
-      phone:"Phone number",
+      phone:"Phone number (9–10 digits)",
       email:"Email address",
       hospital:"Hospital",
       hospitalSearch:"Search hospital…",
       dates:"Dates of stay",
       dateFrom:"Check-in",
       dateTo:"Check-out",
-      dateHint:"Format: dd/mm/yyyy",
+      dateHint:"Type digits only, e.g. 01022026 → 01/02/2026",
       guests:"Number of guests",
-      kitchenette:"Kitchenette required",
-      bnb:"Bed & Breakfast option",
+      stayType:"Stay type",
+      kitchenette:"Kitchenette",
+      bnb:"Bed & Breakfast",
       more:"Additional information (optional)",
       moreHint:"Please mention any special situation or specific need.",
       submit:"Submit request",
@@ -175,10 +178,12 @@
       confirmedTitle:"Your accommodation is confirmed",
       confirmedSub:"We wish you strength and comfort during this time.",
       home:"Back to home",
-      yes:"Yes",
-      no:"No",
+      yes:"Yes", no:"No",
       donation:"Suggested donation",
-      validation:"Please check: dates must be dd/mm/yyyy, and check-out must be after check-in.",
+      validation_dates:"Please check dates: dd/mm/yyyy, and check-out must be after check-in.",
+      validation_id:"Please enter a valid ID number (TZ): 9 digits.",
+      validation_phone:"Please enter a valid phone number: 9 to 10 digits.",
+      validation_staytype:"Please choose Kitchenette OR Bed & Breakfast.",
       offer1Title:"Charity Apartment",
       offer1Sub:"Furnished studio with kitchenette",
       offer2Title:"Private Room",
@@ -198,19 +203,20 @@
       createHint:"נא להזין כמה פרטים כדי שנוכל לעזור.",
       firstName:"שם פרטי",
       lastName:"שם משפחה",
-      idNumber:"תעודת זהות",
+      idNumber:"תעודת זהות – 9 ספרות",
       address:"כתובת",
-      phone:"מספר טלפון",
-      email:"כתובת אימייל",
+      phone:"טלפון (9–10 ספרות)",
+      email:"אימייל",
       hospital:"בית חולים",
       hospitalSearch:"חיפוש בית חולים…",
       dates:"תאריכי שהייה",
       dateFrom:"כניסה",
       dateTo:"יציאה",
-      dateHint:"פורמט: dd/mm/yyyy",
+      dateHint:"הקלידו ספרות בלבד, למשל 01022026 → 01/02/2026",
       guests:"מספר אורחים",
-      kitchenette:"נדרש מטבחון",
-      bnb:"אפשרות לינה וארוחת בוקר",
+      stayType:"סוג שהייה",
+      kitchenette:"מטבחון",
+      bnb:"לינה וארוחת בוקר",
       more:"מידע נוסף (לא חובה)",
       moreHint:"ניתן לציין כל צורך מיוחד או מצב חריג.",
       submit:"שליחת בקשה",
@@ -239,10 +245,12 @@
       confirmedTitle:"מקום הלינה אושר",
       confirmedSub:"מאחלים לכם חוסן ונחמה בתקופה זו.",
       home:"חזרה למסך הבית",
-      yes:"כן",
-      no:"לא",
+      yes:"כן", no:"לא",
       donation:"תרומה מוצעת",
-      validation:"נא לבדוק: תאריכים בפורמט dd/mm/yyyy, ותאריך יציאה אחרי תאריך כניסה.",
+      validation_dates:"נא לבדוק תאריכים: dd/mm/yyyy ותאריך יציאה אחרי תאריך כניסה.",
+      validation_id:"נא להזין תעודת זהות תקינה: 9 ספרות.",
+      validation_phone:"נא להזין טלפון תקין: 9 עד 10 ספרות.",
+      validation_staytype:"נא לבחור מטבחון או לינה וארוחת בוקר (לא שניהם).",
       offer1Title:"דירת עמותה",
       offer1Sub:"סטודיו מרוהט עם מטבחון",
       offer2Title:"חדר פרטי",
@@ -261,7 +269,9 @@
     request: {
       firstName:"", lastName:"", idNumber:"", address:"", phone:"", email:"",
       hospitalId:"ichilov", dateFrom:"", dateTo:"",
-      guests:2, kitchenette:true, bnb:false, additionalInfo:""
+      guests:2,
+      stayType:"kitchenette", // "kitchenette" | "bnb"
+      additionalInfo:""
     },
     offers: [
       {id:"offer-1", titleKey:"offer1Title", subKey:"offer1Sub", distance:"800 m", nightlyIls:0, donationSuggested:180, kitchenette:true, badge:true},
@@ -301,7 +311,21 @@
 
   function go(screen){ state.screen = screen; state.error=""; render(); }
 
-  // dd/mm/yyyy parser (UTC)
+  // ===== Input helpers =====
+  function onlyDigits(s){ return String(s || "").replace(/\D/g,""); }
+
+  // Date: user types digits only -> format dd/mm/yyyy
+  function formatDateFromDigits(digits){
+    const d = onlyDigits(digits).slice(0,8);  // ddmmyyyy
+    const dd = d.slice(0,2);
+    const mm = d.slice(2,4);
+    const yyyy = d.slice(4,8);
+    let out = dd;
+    if(mm) out += "/" + mm;
+    if(yyyy) out += "/" + yyyy;
+    return out;
+  }
+
   function parseDMY(s){
     const m = /^\s*(\d{2})\/(\d{2})\/(\d{4})\s*$/.exec(s || "");
     if(!m) return null;
@@ -323,6 +347,16 @@
     return `₪${amount}`;
   }
 
+  // Validations
+  function isValidTZ(idDigits){
+    const d = onlyDigits(idDigits);
+    return d.length === 9;
+  }
+  function isValidPhone(phoneDigits){
+    const d = onlyDigits(phoneDigits);
+    return d.length >= 9 && d.length <= 10;
+  }
+
   function ScreenHome(){
     return `
       <div class="app">
@@ -339,6 +373,7 @@
     const r = state.request;
     const q = (state.hospitalFilter||"").toLowerCase();
     const filtered = hospitals.filter(h=>hospitalOptionLabel(h).toLowerCase().includes(q));
+
     return `
       <div class="app">
         <div class="h1">${t("createTitle")}</div>
@@ -350,8 +385,16 @@
           </div>
 
           <div class="inline">
-            <div class="field"><label>${t("idNumber")}</label><input id="idNumber" value="${escapeHtml(r.idNumber)}"/></div>
-            <div class="field"><label>${t("phone")}</label><input id="phone" value="${escapeHtml(r.phone)}"/></div>
+            <div class="field">
+              <label>${t("idNumber")}</label>
+              <input id="idNumber" inputmode="numeric" placeholder="#########" value="${escapeHtml(r.idNumber)}"/>
+              <div class="small" style="margin-top:6px">${state.lang==="he" ? "ספרות בלבד (9)" : "Digits only (9)"}</div>
+            </div>
+            <div class="field">
+              <label>${t("phone")}</label>
+              <input id="phone" inputmode="numeric" placeholder="##########" value="${escapeHtml(r.phone)}"/>
+              <div class="small" style="margin-top:6px">${state.lang==="he" ? "9–10 ספרות" : "9–10 digits"}</div>
+            </div>
           </div>
 
           <div class="field"><label>${t("email")}</label><input id="email" value="${escapeHtml(r.email)}"/></div>
@@ -387,8 +430,14 @@
             <input id="guests" type="number" min="1" max="8" value="${r.guests}"/>
           </div>
 
-          <div class="toggle"><span>${t("kitchenette")}</span><input id="kitchenette" type="checkbox" ${r.kitchenette ? "checked":""}/></div>
-          <div class="toggle"><span>${t("bnb")}</span><input id="bnb" type="checkbox" ${r.bnb ? "checked":""}/></div>
+          <div class="radioGroup">
+            <label style="margin-bottom:8px">${t("stayType")}</label>
+            <div class="radioRow">
+              <label><input type="radio" name="stayType" id="stay_k" value="kitchenette" ${r.stayType==="kitchenette"?"checked":""}/> ${t("kitchenette")}</label>
+              <label><input type="radio" name="stayType" id="stay_b" value="bnb" ${r.stayType==="bnb"?"checked":""}/> ${t("bnb")}</label>
+            </div>
+            <div class="small" style="margin-top:8px">${state.lang==="he" ? "בחירה אחת בלבד" : "Choose one option only"}</div>
+          </div>
 
           <div class="field">
             <label>${t("more")}</label>
@@ -478,7 +527,7 @@
           <div class="badge" style="margin-top:10px">${t("coordinated")}</div>
           <div class="hr"></div>
           <div class="p"><b>${t("distance")}:</b> ${o.distance}</div>
-          <div class="p" style="margin-top:6px"><b>${t("facilities")}:</b> Kitchenette — ${o.kitchenette ? t("yes") : t("no")}</div>
+          <div class="p" style="margin-top:6px"><b>${t("facilities")}:</b> ${state.request.stayType==="kitchenette" ? t("kitchenette") : t("bnb")}</div>
           <div class="p" style="margin-top:6px"><b>${t("price")}:</b> ${priceLine}</div>
           ${offerSummaryPills(o)}
           <div class="hr"></div>
@@ -495,13 +544,11 @@
     const r = state.request;
     const o = state.offers.find(x=>x.id===state.selectedOfferId);
     const hosp = hospitalLabel(r.hospitalId);
-
     const d1 = parseDMY(r.dateFrom);
     const d2 = parseDMY(r.dateTo);
     const nights = nightsBetween(d1, d2);
     const total = (nights && o) ? (o.nightlyIls * nights) : null;
     const donation = (o && o.nightlyIls===0) ? (o.donationSuggested || 0) : 0;
-
     const fullName = (r.firstName || r.lastName) ? `${escapeHtml(r.firstName)} ${escapeHtml(r.lastName)}`.trim() : "—";
 
     return `
@@ -514,22 +561,17 @@
           <div class="p" style="margin-top:6px"><b>${t("phone")}:</b> ${escapeHtml(r.phone || "—")}</div>
           <div class="p" style="margin-top:6px"><b>${t("email")}:</b> ${escapeHtml(r.email || "—")}</div>
           <div class="p" style="margin-top:6px"><b>${t("address")}:</b> ${escapeHtml(r.address || "—")}</div>
-
           <div class="hr"></div>
-
           <div class="p"><b>${t("hospital")}:</b> ${escapeHtml(hosp)}</div>
           <div class="p" style="margin-top:6px"><b>${t("dates")}:</b> ${escapeHtml(r.dateFrom || "—")} → ${escapeHtml(r.dateTo || "—")}</div>
-
+          <div class="p" style="margin-top:6px"><b>${t("stayType")}:</b> ${r.stayType==="kitchenette"?t("kitchenette"):t("bnb")}</div>
           <div class="kpi">
             <div class="pill">${t("nights")}: <b>${nights ?? "—"}</b></div>
             <div class="pill">${t("nightly")}: <b>${o ? moneyILS(o.nightlyIls) : "—"}</b></div>
             <div class="pill">${t("total")}: <b>${moneyILS(total)}</b></div>
           </div>
-
           ${donation ? `<div class="notice" style="margin-top:10px"><b>${t("donation")}:</b> ${moneyILS(donation)}</div>` : ""}
-
           <div class="notice">${t("managed")}</div>
-
           <div class="btnrow">
             <button class="btn secondary" data-action="back-details">${t("back")}</button>
             <button class="btn primary" data-action="confirm">${t("confirm")}</button>
@@ -576,7 +618,6 @@
     document.querySelectorAll("[data-action]").forEach(el=>{
       el.addEventListener("click", ()=>{
         const act = el.getAttribute("data-action");
-
         if(act==="go-create") return go("create");
         if(act==="back-home") return go("home");
         if(act==="back-create") return go("create");
@@ -595,32 +636,55 @@
         }
 
         if(act==="submit"){
+          // Collect
           state.request.firstName = $("#firstName").value.trim();
           state.request.lastName = $("#lastName").value.trim();
-          state.request.idNumber = $("#idNumber").value.trim();
-          state.request.phone = $("#phone").value.trim();
+
+          // digits-only for TZ & phone
+          state.request.idNumber = onlyDigits($("#idNumber").value);
+          state.request.phone = onlyDigits($("#phone").value);
+
           state.request.email = $("#email").value.trim();
           state.request.address = $("#address").value.trim();
           state.request.hospitalId = $("#hospitalSelect").value;
+
           state.request.dateFrom = $("#dateFrom").value.trim();
           state.request.dateTo = $("#dateTo").value.trim();
+
           state.request.guests = parseInt($("#guests").value || "2", 10);
-          state.request.kitchenette = $("#kitchenette").checked;
-          state.request.bnb = $("#bnb").checked;
+
+          // Stay type (exclusive)
+          const k = $("#stay_k")?.checked;
+          const b = $("#stay_b")?.checked;
+          if(k) state.request.stayType = "kitchenette";
+          if(b) state.request.stayType = "bnb";
+
           state.request.additionalInfo = $("#additionalInfo").value.trim();
 
+          // Validate TZ/phone
+          if(!isValidTZ(state.request.idNumber)){
+            state.error = t("validation_id"); render(); return;
+          }
+          if(!isValidPhone(state.request.phone)){
+            state.error = t("validation_phone"); render(); return;
+          }
+          if(!(state.request.stayType==="kitchenette" || state.request.stayType==="bnb")){
+            state.error = t("validation_staytype"); render(); return;
+          }
+
+          // Validate dates
           const d1 = parseDMY(state.request.dateFrom);
           const d2 = parseDMY(state.request.dateTo);
           const n = nightsBetween(d1, d2);
           if(!d1 || !d2 || !n){
-            state.error = t("validation");
-            return render();
+            state.error = t("validation_dates"); render(); return;
           }
           return go("sent");
         }
       });
     });
 
+    // Hospital search
     const hs = $("#hospitalSearch");
     if(hs){
       hs.addEventListener("input", ()=>{
@@ -628,11 +692,43 @@
         render();
       });
     }
+
+    // Input masks: dates -> auto "/"
+    const df = $("#dateFrom");
+    const dt = $("#dateTo");
+    if(df){
+      df.addEventListener("input", ()=>{
+        const pos = df.selectionStart || 0;
+        const digits = onlyDigits(df.value);
+        df.value = formatDateFromDigits(digits);
+        try { df.setSelectionRange(df.value.length, df.value.length); } catch(e){}
+      });
+    }
+    if(dt){
+      dt.addEventListener("input", ()=>{
+        const digits = onlyDigits(dt.value);
+        dt.value = formatDateFromDigits(digits);
+        try { dt.setSelectionRange(dt.value.length, dt.value.length); } catch(e){}
+      });
+    }
+
+    // Digits-only for TZ & phone while typing
+    const id = $("#idNumber");
+    const ph = $("#phone");
+    if(id){
+      id.addEventListener("input", ()=>{
+        id.value = onlyDigits(id.value).slice(0,9);
+      });
+    }
+    if(ph){
+      ph.addEventListener("input", ()=>{
+        ph.value = onlyDigits(ph.value).slice(0,10);
+      });
+    }
   }
 
   $("#btn_en").addEventListener("click", ()=>setLang("en"));
   $("#btn_he").addEventListener("click", ()=>setLang("he"));
-
   setLang(state.lang);
 </script>
 </body>
